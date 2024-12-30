@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Android App</string>
+    <string name="no_connection_message">No internet connection</string>
+    <string name="service_unavaileble_message">Service is unavaileble</string>
+</resources>
