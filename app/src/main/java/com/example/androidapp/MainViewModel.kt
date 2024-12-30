@@ -6,7 +6,6 @@ class MainViewModel(private val model: Model<Joke,Error>) {
     private  var textCallback:TextCallback = TextCallback.Empty()
 
     fun getJoke(){
-//    textCallback.provideText("res")
     model.fetch()
 
     }
