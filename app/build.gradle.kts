@@ -39,6 +39,8 @@ android {
 }
 
 dependencies {
+    implementation ("com.squareup.retrofit2:retrofit:2.9.0") // Исправлено название библиотеки Retrofit
+    implementation ("com.squareup.retrofit2:converter-gson:2.9.0") // Указана точная версия
     implementation ("com.google.code.gson:gson:2.11.0")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)

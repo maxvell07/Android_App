@@ -1,5 +1,10 @@
 package com.example.androidapp
 
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.net.UnknownHostException
+
 class BaseModel(
     private val JokeService:JokeService,
     private val manageResources: ManageResources
@@ -9,20 +14,43 @@ class BaseModel(
     private var callback:ResultCallback<Joke,Error>? = null
 
     override fun fetch() {
-        JokeService.Joke(object : ServiceCallback{
-            override fun returnSuccess(data: JokeCloud) {
-
-                callback?.provideSuccess(data.toJoke())
+        JokeService.Joke().enqueue(object : Callback<JokeCloud> {
+            override fun onResponse(call: Call<JokeCloud>, response: Response<JokeCloud>) {
+                if (response.isSuccessful){
+                    val body = response.body()
+                    if (body == null)
+                        callback?.provideError(ServiceError)
+                    else
+                    callback?.provideSuccess(body.toJoke())
+                }else{
+                    callback?.provideError(ServiceError)
+                }
             }
 
-            override fun returnError(errorType: ErrorType) {
-                when (errorType){
-                    ErrorType.NO_CONNECTION -> callback?.provideError(Noconnection)
-                    ErrorType.OTHER -> callback?.provideError(ServiceError)
+            override fun onFailure(call: Call<JokeCloud>, t: Throwable) {
 
+                if (t is UnknownHostException || t is java.net.ConnectException){
+
+                    callback?.provideError(Noconnection)
+                }else{
+                    callback?.provideError(ServiceError)
                 }
             }
         })
+//        JokeService.Joke(object : ServiceCallback{
+//            override fun returnSuccess(data: JokeCloud) {
+//
+//                callback?.provideSuccess(data.toJoke())
+//            }
+//
+//            override fun returnError(errorType: ErrorType) {
+//                when (errorType){
+//                    ErrorType.NO_CONNECTION -> callback?.provideError(Noconnection)
+//                    ErrorType.OTHER -> callback?.provideError(ServiceError)
+//
+//                }
+//            }
+//        })
     }
 
     override fun clear() {
